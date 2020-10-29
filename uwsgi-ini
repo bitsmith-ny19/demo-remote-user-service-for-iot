@@ -1,0 +1,2 @@
+#uwsgi --socket python_pyap1_1:3031 --wsgi-file uwsgi-p1.py --master --processes 4 --threads 2 --stats localhost:9191
+uwsgi --socket python_pyap1_1:3031 --manage-script-name --mount '/=rucs:create_app()' --master --processes 4 --threads 2 --stats localhost:9191

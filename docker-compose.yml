@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  httpd:
+    build:
+      context: .
+      target: httpd
+    ports:
+      - "8080:80"
+    tty: true
+    volumes:
+      - .:/pyap1
+  pyap1:
+    build:
+      context: .
+      target: pyap1
+    tty: true
+    volumes:
+      - .:/pyap1
+  house_state_db:
+    build:
+      context: .
+      target: house_state_db
+    tty: true
+    volumes:
+      - ./instance/house_state:/db/conf

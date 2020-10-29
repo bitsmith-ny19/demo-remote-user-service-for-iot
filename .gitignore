@@ -1,0 +1,10 @@
+**/*.pyc
+# used by the Vi editor (should move to ~/.gitconfig)
+**/*.swp
+# I use for unprepared notes
+# (should move to $GIT_DIR/info/exclude)
+**/*[0-9]
+**/config.py
+**/__pycache__/
+config
+instance
