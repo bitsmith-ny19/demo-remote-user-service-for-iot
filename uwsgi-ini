@@ -1,2 +1,21 @@
-#uwsgi --socket python_pyap1_1:3031 --wsgi-file uwsgi-p1.py --master --processes 4 --threads 2 --stats localhost:9191
-uwsgi --socket python_pyap1_1:3031 --manage-script-name --mount '/=rucs:create_app()' --master --processes 4 --threads 2 --stats localhost:9191
+#!/bin/bash
+# initialization of a demo house state Mongodb
+# collection
+# to fix: to move RUCS_DEMO environment
+# variable to docker-compose environment -
+# it should be chosen at that phase by the
+# user of the demo when they run `docker-compose up` -
+# that's easier.
+# there is then to add a conditional to this script
+# to run init_db and uwsgi with RUCS_DEMO env
+# variable set
+python demo/demo_house_state.py \
+&& uwsgi \
+	--socket python_pyap1_1:3031 \
+	--manage-script-name \
+	--mount '/=rucs:create_app()' \
+	--master \
+	--processes 4 \
+	--threads 2 \
+	--stats localhost:9191 \
+	--env RUCS_DEMO=1

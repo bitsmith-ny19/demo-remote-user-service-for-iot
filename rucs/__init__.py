@@ -1,3 +1,4 @@
+from os import environ
 from flask import Flask
 from rucs.config import Config
 from uwsgidecorators import postfork

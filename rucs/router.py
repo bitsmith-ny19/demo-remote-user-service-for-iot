@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import session
 from flask import g
-from rucs.models.house_state import house_state
+from rucs.models.house_state import HouseState
 
 router = Blueprint( "/", __name__ )
 
@@ -24,7 +24,7 @@ def get():
   return sal[0].to_json()
 
 @router.route("/", methods = ["POST"])
-def write():
+def post():
   p1_1 = house_state( termo = 27.4 )
   p1_1.save()
   return "se registró el valor"
