@@ -14,8 +14,9 @@ def post():
   `flask.session` can be set up quickly and sets
   HttpOnly flag, although in the demo use case, one
   could equally use the `flask.after_this_request`
-  decorator to set the cookie headers manually.
+  decorator to set the cookie headers in the response
+  object.
   """
   #g.house_id = session.get("house_id")
   session["demo_house_id"] = request.get_json()["demo_house_id"]
-  return json.dumps(request.get_json()["aa"])
+  return "\"tested 123\""
