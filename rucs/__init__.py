@@ -4,6 +4,7 @@ from rucs.config import Config
 from uwsgidecorators import postfork
 from flask_mongoengine import MongoEngine
 from rucs.router import router
+from demo import routes_demo_only
 
 def create_app( testing_conf = None ):
 
@@ -22,6 +23,14 @@ def create_app( testing_conf = None ):
   def setup_db():
     mongo.init_app( rucs )
 
+  if "RUCS_DEMO" in environ:
+    rucs.register_blueprint(routes_demo_only.routes)
+
   rucs.register_blueprint(router)
+
+  @rucs.after_request
+  def set_json( res ):
+    res.headers["Content-Type"] = "application/json"
+    return res
 
   return rucs
