@@ -1,12 +1,28 @@
+## RUCS (R)emote (U)ser (C)ontrol (S)ervice
+
 ### exercise: control home automation JSON file
 
+#### to start
+
+- the app bind to port 8080, if that is busy, to
+change it in _docker-compose.yml_
+
+- `docker-compose up -e DEMO_RUCS=1`
+
+- in a web browser with JavaScript, to go to the
+path _/rucs/_ (for eg. _localhost:8080/rucs/_)
+
+#### description
+
 exercise in web development: the state of a house
-includes the on/off state of some lighting and a
+includes the on/off state of some lighting units and a
 thermostat. The exercise is to build the web
 service that communicates with the remote user.
 A sepparate web service (not built here),
 would control the house (for ex. "internet of
 things" protocols).
+
+##### detail
 
 As suggested in the description of the exercise
 (not included in this repository), the interface between the
@@ -56,7 +72,7 @@ is that it is accessible by documentation and
 documentation and includes testing for debugging,
 quality control, and programming practices.
 
-based on the observations above, 
+Based on the observations above, 
 multiuser support is not included in the demo -
 the authentication controller uses
 a mock token and there is a demo house state that is

@@ -28,6 +28,7 @@ def create_app( testing_conf = None ):
 
   rucs.register_blueprint(router)
 
+  # to move this to a controller subpackage?
   @rucs.after_request
   def set_json( res ):
     res.headers["Content-Type"] = "application/json"

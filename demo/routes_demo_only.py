@@ -1,6 +1,12 @@
 from flask import (session, g, request, Blueprint)
 import json
-routes = Blueprint( "/demo", __name__ )
+from rucs.models.house_state import HouseState
+routes = Blueprint( "demo", __name__, url_prefix = "/demo" )
+
+@routes.route("/dangerous", methods= ["GET"])
+def get():
+  sal = HouseState.objects()
+  return sal[0]["id"].__str__()
 
 @routes.route("/set_token", methods = ["POST"])
 def post():
@@ -18,5 +24,5 @@ def post():
   object.
   """
   #g.house_id = session.get("house_id")
-  session["demo_house_id"] = request.get_json()["demo_house_id"]
+  session["house_id"] = request.get_json()["house_id"]
   return "\"tested 123\""
