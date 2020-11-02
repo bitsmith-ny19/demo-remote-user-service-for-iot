@@ -1,10 +1,9 @@
 FROM mongo:4.0.20-xenial AS rucs_db
 
-#RUN /bin/mongo
-
 FROM nginx:stable AS httpd
 
-COPY config/default.conf /etc/nginx/conf.d
+RUN rm /etc/nginx/conf.d/default.conf
+COPY config/httpd_default.conf /etc/nginx/conf.d/default.conf
 COPY index.html /usr/share/nginx/html
 COPY index.js /usr/share/nginx/html
 COPY index.css /usr/share/nginx/html
@@ -19,6 +18,7 @@ RUN pip install -r requirements.txt
 
 RUN mkdir -p instance
 
-COPY config/dev.cfg instance
+# todo: load uwsgi as a systemd service
+#COPY uwsgi_rc.local /etc/rc.local
 
-#RUN ./uwsgi-ini
+COPY config/dev.cfg instance
