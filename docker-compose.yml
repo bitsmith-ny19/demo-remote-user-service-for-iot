@@ -30,8 +30,8 @@ services:
         aliases:
           - rucs_api
     tty: true
-#    volumes:
-#      - .:/pyap1
+    volumes:
+      - .:/pyap1
 
   rucs_db:
 #    build:

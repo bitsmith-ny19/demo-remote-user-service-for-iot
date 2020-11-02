@@ -5,7 +5,7 @@ from os import environ
 
 router = Blueprint( "router", __name__ )
 
-@router.before_app_request
+@router.before_request
 def controller_auth():
   """
   this is where authentication components
@@ -27,6 +27,7 @@ def controller_auth():
   
   # check demo token
   if "house_id" in session:
+    print( "rucs.router before_request: house id found" )
     g.house_id = session["house_id"]
 
   # bypass authentication if BYPASS_AUTH flag is set:
@@ -34,6 +35,7 @@ def controller_auth():
     g.house_id = HouseState.objects()[0].id.__str__()
 
   if g.house_id == None:
+    print( "rucs.router: no house id in session" )
     abort( 400, '{"error": {"message": "no access"}}' )
 
 # possible extension: GET value of specific field

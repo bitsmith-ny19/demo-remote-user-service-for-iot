@@ -12,13 +12,16 @@ FROM python:3.8 AS rucs_api
 
 WORKDIR /pyap1
 
-COPY . ./
+#COPY . ./
+COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 
 RUN mkdir -p instance
 
+COPY config/dev.cfg instance
+
+VOLUME /pyap1
+
 # todo: load uwsgi as a systemd service
 #COPY uwsgi_rc.local /etc/rc.local
-
-COPY config/dev.cfg instance

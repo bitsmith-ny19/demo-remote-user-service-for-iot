@@ -11,9 +11,11 @@ def create_app( testing_conf = None ):
 
   
   rucs = Flask( __name__, instance_relative_config = True )
+  print( "demo:", environ["DEMO"], "rucs_config:", environ["RUCS_CONFIG"])
 
   if testing_conf is None:
-    print( "..................", environ )
+    print( "rucs.__ini__: no test conf, loading",
+      environ["RUCS_CONFIG"] )
     rucs.config.from_envvar("RUCS_CONFIG")
   else:
     rucs.config.from_mapping( testing_conf )
