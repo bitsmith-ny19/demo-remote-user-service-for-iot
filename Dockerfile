@@ -1,16 +1,24 @@
+FROM mongo:4.0.20-xenial AS rucs_db
+
+#RUN /bin/mongo
+
 FROM nginx:stable AS httpd
 
 COPY config/default.conf /etc/nginx/conf.d
-COPY config/index /usr/share/NGINX/html
+COPY index.html /usr/share/nginx/html
+COPY index.js /usr/share/nginx/html
+COPY index.css /usr/share/nginx/html
 
-#EXPOSE 3031
-
-FROM python:3.8 AS pyap1
+FROM python:3.8 AS rucs_api
 
 WORKDIR /pyap1
 
-COPY requirements.txt .
+COPY . ./
 
 RUN pip install -r requirements.txt
 
-FROM mongo:4.0.20-xenial AS house_state_db
+RUN mkdir -p instance
+
+COPY config/dev.cfg instance
+
+#RUN ./uwsgi-ini

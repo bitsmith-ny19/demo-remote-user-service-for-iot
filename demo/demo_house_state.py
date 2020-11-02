@@ -3,7 +3,7 @@ from house_state import (HouseState, Lighting)
 
 def init_db():
   mongo0 = connect( host = \
-    "mongodb://python_house_state_db_1:27017/house_state"
+    "mongodb://rucs_db:27017/house_state_dev"
   )
   db1 = mongo0.get_default_database()
   hs = db1.get_collection("house_state")

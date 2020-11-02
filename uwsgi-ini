@@ -1,21 +1,26 @@
 #!/bin/bash
-# initialization of a demo house state Mongodb
+# - execute uwsgi server for RUCS
+# - initialization of a development / demo house state Mongodb
 # collection
-# to fix: to move RUCS_DEMO environment
-# variable to docker-compose environment -
-# it should be chosen at that phase by the
-# user of the demo when they run `docker-compose up` -
-# that's easier.
-# there is then to add a conditional to this script
-# to run init_db and uwsgi with RUCS_DEMO env
-# variable set
+#
+# todo: if PRODUCTION_CONFIG is set, there is no need
+# to initialize the dev database
+
+# if DEMO is set in the env (used in docker-compose.yml)
+# define DEMO=set. If PRODUCTION_CONFIG is set (used in
+# docker-compose.yml), read
+# production settings (such as secret key) from PRODUCTION_CONFIG
+# variable, otherwise, read from file dev.cfg
+chown 1000:1000 instance/rucs.log
 python demo/demo_house_state.py \
-&& uwsgi \
-	--socket python_pyap1_1:3031 \
-	--manage-script-name \
-	--mount '/=rucs:create_app()' \
-	--master \
-	--processes 4 \
-	--threads 2 \
-	--stats localhost:9191 \
-	--env RUCS_DEMO=1
+	&&
+	DEMO=${DEMO:+bar} \
+	BYPASS_AUTH=${BYPASS_AUTH+baz} \
+	RUCS_CONFIG=${PRODUCTION_CONFIG:-dev.cfg} \
+	uwsgi \
+		--socket rucs_api:3031 \
+		--manage-script-name \
+		--mount '/=rucs:create_app()' \
+		--master \
+		--processes 4 \
+		--threads 2 \

@@ -4,22 +4,35 @@ services:
     build:
       context: .
       target: httpd
+    networks:
+      default:
+        aliases:
+          - httpd
     ports:
       - "8080:80"
     tty: true
-    volumes:
-      - .:/pyap1
-  pyap1:
+  rucs_api:
     build:
-      context: .
-      target: pyap1
+       context: .
+       target: rucs_api
+    depends_on:
+      - rucs_db
+    environment:
+      - DEMO=${RUCS_DEMO}
+      - PRODUCTION_CONFIG=${RUCS_PRODUCTION_CONFIG}
+    networks:
+      default:
+        aliases:
+          - rucs_api
     tty: true
     volumes:
       - .:/pyap1
-  house_state_db:
+  rucs_db:
     build:
       context: .
-      target: house_state_db
+      target: rucs_db
+    networks:
+      default:
+        aliases:
+          - rucs_db
     tty: true
-    volumes:
-      - ./instance/house_state:/db/conf

@@ -1,6 +1,7 @@
 from flask import (Blueprint, session, g, request, abort)
 from rucs.models.house_state import (HouseState, Lighting)
 import json
+from os import environ
 
 router = Blueprint( "router", __name__ )
 
@@ -14,7 +15,7 @@ def controller_auth():
   demo app - the Mongo object id of the demo
   house state (for convenience of
   the user of the demo, the id is printed to
-  stdout of the uwsgi process). if the demo
+  stdout of the uwsgi process). if demo
   is enabled, the user can enter the object id
   in the index page, and this sets the cookie
   with the value of this token.
@@ -28,9 +29,9 @@ def controller_auth():
   if "house_id" in session:
     g.house_id = session["house_id"]
 
-  # *** DEV MODE ONLY ***
-  g.house_id = \
-    HouseState.objects()[0].id.__str__()
+  # bypass authentication if BYPASS_AUTH flag is set:
+  if environ["BYPASS_AUTH"]:
+    g.house_id = HouseState.objects()[0].id.__str__()
 
   if g.house_id == None:
     abort( 400, '{"error": {"message": "no access"}}' )
@@ -48,8 +49,8 @@ def get():
     ...
   ] }
   """
-  sal = HouseState.objects( id = g.house_id )
-  return sal[0].to_json()
+  house_state = HouseState.objects( id = g.house_id )
+  return house_state[0].to_json()
 
 @router.route("/", methods = ["POST"])
 def post():
@@ -61,7 +62,7 @@ def post():
   Uniqueness condition verified manually  -
   mongodb can only verify uniqueness across a collection, and
   not in a list of embedded documents as a "virtual collection"
-
+ 
   """
   house_state = HouseState.objects( id = g.house_id )[0]
   label_new = request.get_json()["label"]
