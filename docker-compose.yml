@@ -2,7 +2,7 @@ version: "3.8"
 services:
   httpd:
     build:
-      context: ./config
+      context: ./httpd
       dockerfile: Dockerfile-httpd
     image: httpd:rucs-nginx-http-server
     networks:
@@ -14,13 +14,10 @@ services:
     tty: true
     depends_on:
        - rucs_api
-#    volumes: 
-#      - ./conf/httpd_default.conf:/etc/nginx/conf.d/default.conf:ro
       
   rucs_api:
     build:
        context: .
-       target: rucs_api
     image: rucs-api:rucs-api
     depends_on:
       - rucs_db
@@ -44,3 +41,6 @@ services:
         aliases:
           - rucs_db
     tty: true
+volumes:
+  rucs-api-instance:
+  rucs-api-pybits:

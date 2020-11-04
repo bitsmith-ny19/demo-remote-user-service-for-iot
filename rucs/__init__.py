@@ -5,14 +5,14 @@ from flask_mongoengine import MongoEngine
 from rucs.router import router
 from demo import routes_demo_only
 
-def create_app(
-  testing_conf = None,
-  instance_path = "/usr/lib/rucs-api-instance"
-):
+def create_app( testing_conf = None ):
 
   mongo = MongoEngine()
   
-  rucs = Flask( __name__, instance_relative_config = True )
+  rucs = Flask(
+    __name__,
+    instance_relative_config = True,
+    instance_path = "/usr/lib/rucs-api-instance" )
 
   if testing_conf is None:
     print( "loading config from", environ["RUCS_CONFIG"] )

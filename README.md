@@ -9,10 +9,6 @@ browser based web clients do not fetch data because of
 http headers requirements (todo: set header values in server
 response)
 
-- while the uwsgi server process loads the service
-successfully when loaded manually from its container, this
-doesn't work when loaded from the Dockerfile.
-
 - while logging / debugging data appears in the terminals -
 mongodb and docker to the tty to which docker-compose
 is attached, and the Python and uwsgi to the tty where
