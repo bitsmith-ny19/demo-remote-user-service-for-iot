@@ -11,7 +11,10 @@
 # docker-compose.yml), read
 # production settings (such as secret key) from PRODUCTION_CONFIG
 # variable, otherwise, read from file dev.cfg
+mkdir /usr/lib/__pycache__
+export PYTHONPYCACHEPREFIX=/usr/lib/__pycache__
 chown 1000:1000 instance/rucs.log
+chown 1000:1000 instance/dev.cfg
 python demo/demo_house_state.py \
 	&&
 	DEMO=${DEMO:+bar} \

@@ -1,27 +1,20 @@
-FROM mongo:4.0.20-xenial AS rucs_db
+FROM python:3.8
 
-FROM nginx:stable AS httpd
+WORKDIR /usr/src
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY config/httpd_default.conf /etc/nginx/conf.d/default.conf
-COPY index.html /usr/share/nginx/html
-COPY index.js /usr/share/nginx/html
-COPY index.css /usr/share/nginx/html
+COPY requirements.txt /tmp
 
-FROM python:3.8 AS rucs_api
+RUN pip install -r /tmp/requirements.txt
 
-WORKDIR /pyap1
+RUN mkdir -p /usr/lib/rucs-api-instance
 
-#COPY . ./
-COPY requirements.txt ./
+COPY config/dev.cfg /usr/lib/rucs-api-instance
 
-RUN pip install -r requirements.txt
+VOLUME /usr/lib/rucs-api-instance
+VOLUME /usr/lib/__pycache__
 
-RUN mkdir -p instance
+# todo: load uwsgi as a systemd service - to replace entrypoint?
+# COPY uwsgi_rc.local /etc/rc.local
 
-COPY config/dev.cfg instance
-
-VOLUME /pyap1
-
-# todo: load uwsgi as a systemd service
-#COPY uwsgi_rc.local /etc/rc.local
+ENTRYPOINT ["/usr/src/uwsgi-ini"] 
+CMD ["/bin/bash"]

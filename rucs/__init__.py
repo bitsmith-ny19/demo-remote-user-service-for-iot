@@ -5,17 +5,17 @@ from flask_mongoengine import MongoEngine
 from rucs.router import router
 from demo import routes_demo_only
 
-def create_app( testing_conf = None ):
+def create_app(
+  testing_conf = None,
+  instance_path = "/usr/lib/rucs-api-instance"
+):
 
   mongo = MongoEngine()
-
   
   rucs = Flask( __name__, instance_relative_config = True )
-  print( "demo:", environ["DEMO"], "rucs_config:", environ["RUCS_CONFIG"])
 
   if testing_conf is None:
-    print( "rucs.__ini__: no test conf, loading",
-      environ["RUCS_CONFIG"] )
+    print( "loading config from", environ["RUCS_CONFIG"] )
     rucs.config.from_envvar("RUCS_CONFIG")
   else:
     rucs.config.from_mapping( testing_conf )
@@ -27,6 +27,7 @@ def create_app( testing_conf = None ):
     mongo.init_app( rucs )
 
   if environ["DEMO"]:
+    print("initializing demo mode")
     rucs.register_blueprint(routes_demo_only.routes)
 
   rucs.register_blueprint(router)

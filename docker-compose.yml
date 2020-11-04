@@ -2,8 +2,9 @@ version: "3.8"
 services:
   httpd:
     build:
-      context: .
-      target: httpd
+      context: ./config
+      dockerfile: Dockerfile-httpd
+    image: httpd:rucs-nginx-http-server
     networks:
       default:
         aliases:
@@ -20,6 +21,7 @@ services:
     build:
        context: .
        target: rucs_api
+    image: rucs-api:rucs-api
     depends_on:
       - rucs_db
     environment:
@@ -31,12 +33,11 @@ services:
           - rucs_api
     tty: true
     volumes:
-      - .:/pyap1
+      - .:/usr/src
+      - rucs-api-pybits:/usr/lib/__pycache__
+      - rucs-api-instance:/usr/lib/rucs-api-instance
 
   rucs_db:
-#    build:
-#      context: .
-#      target: rucs_db
     image: mongo:4.0.20-xenial
     networks:
       default:
