@@ -11,7 +11,6 @@ COPY config/dev.cfg /usr/lib/rucs-api-instance
 RUN mkdir -p /usr/lib/__pycache__
 
 VOLUME /usr/lib/rucs-api-instance
-#VOLUME /usr/lib/__pycache__
 
 # todo: load uwsgi as a systemd service - to replace entrypoint?
 # COPY uwsgi_rc.local /etc/rc.local

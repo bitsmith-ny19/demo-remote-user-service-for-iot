@@ -1,3 +1,4 @@
+const domain = "localhost"
 const sampleData = {
     "_id": {
         "$oid": "5f9f31194d209a9655856f6b"
@@ -24,7 +25,7 @@ async function getToken(houseId) {
         "house_id": houseId
     }
 
-    const res = await fetch('http://localhost:8080/rucs/demo/set_token', {
+    const res = await fetch(`http://${domain}:8080/rucs/demo/set_token`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -36,16 +37,16 @@ async function getToken(houseId) {
 }
 
 async function getHome() {
-    const res = await fetch('http://localhost:8080/rucs/', {
+    const res = await fetch(`http://${domain}:8080/rucs/`, {
         method: 'GET',
         credentials: 'include'
     })
 
-    return res
+    return res.json()
 }
 
 async function update(record){
-    const res = await fetch('http://localhost:8080/rucs/', {
+    const res = await fetch(`http://${domain}:8080/rucs/`, {
         method: 'PUT',
         body: JSON.stringify(record),
         headers: {
@@ -58,7 +59,7 @@ async function update(record){
 const deleteLight = e => {
     const record = { id: e.currentTarget.parentNode.getAttribute('data-id') }
 
-    fetch('http://localhost:8080/rucs/', {
+    fetch(`http://${domain}:8080/rucs/`, {
         method: 'DELETE',
         body: JSON.stringify(record),
         headers: {
@@ -71,7 +72,7 @@ const deleteLight = e => {
 const addLight = e => {
     const record = { label: e.target.children[0].value, is_on: false }
     
-    fetch('http://localhost:8080/rucs/', {
+    fetch(`http://${domain}:8080/rucs/`, {
         method: 'DELETE',
         body: JSON.stringify(record),
         headers: {
@@ -85,7 +86,7 @@ const updateLabel = e => {
     e.preventDefault()
     const newRecord = {
         lighting: [{
-            id: e.target.getAttribute("data-id"),
+            id: parseInt(e.target.getAttribute("data-id")),
             label: e.target.children[2].value
         }]
     }
@@ -104,7 +105,7 @@ const toggleLight = e => {
     const newVal = (e.target.value === "turn on" ? false : true)
     const newRecord = {
         lighting: [{
-            id: e.target.parentNode.getAttribute("data-id"),
+            id: parseInt(e.target.parentNode.getAttribute("data-id")),
             is_on: e.target.value === "turn on" ? false : true
         }]
     }

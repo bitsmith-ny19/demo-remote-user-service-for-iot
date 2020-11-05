@@ -4,6 +4,8 @@ services:
     build:
       context: ./httpd
       dockerfile: Dockerfile-httpd
+    depends_on:
+       - rucs_api
     image: httpd:rucs-nginx-http-server
     networks:
       default:
@@ -12,25 +14,25 @@ services:
     ports:
       - "8080:80"
     tty: true
-    depends_on:
-       - rucs_api
-      
+    volumes:
+       - ./httpd/content:/usr/share/nginx/html:ro
+
   rucs_api:
     build:
        context: .
-    image: rucs-api:rucs-api
     depends_on:
       - rucs_db
     environment:
       - DEMO=${RUCS_DEMO}
       - PRODUCTION_CONFIG=${RUCS_PRODUCTION_CONFIG}
+    image: rucs-api:rucs-api
     networks:
       default:
         aliases:
           - rucs_api
     tty: true
     volumes:
-      - .:/usr/src
+      - .:/usr/src:ro
       - rucs-api-pybits:/usr/lib/__pycache__
       - rucs-api-instance:/usr/lib/rucs-api-instance
 
@@ -41,6 +43,7 @@ services:
         aliases:
           - rucs_db
     tty: true
+
 volumes:
   rucs-api-instance:
   rucs-api-pybits:

@@ -4,6 +4,7 @@ from uwsgidecorators import postfork
 from flask_mongoengine import MongoEngine
 from rucs.router import router
 from demo import routes_demo_only
+from flask_cors import CORS
 
 def create_app( testing_conf = None ):
 
@@ -13,6 +14,8 @@ def create_app( testing_conf = None ):
     __name__,
     instance_relative_config = True,
     instance_path = "/usr/lib/rucs-api-instance" )
+
+  CORS(rucs)
 
   if testing_conf is None:
     print( "loading config from", environ["RUCS_CONFIG"] )

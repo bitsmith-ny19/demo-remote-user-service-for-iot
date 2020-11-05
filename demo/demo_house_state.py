@@ -11,13 +11,14 @@ def init_db():
 
   demo_state = HouseState( thermostat = 27.0 )
   lighting0 = Lighting(
-    id = "1",
+    id = 1,
     label = "main-entrance-left",
     is_on = 0
   )
   demo_state.lighting.append( lighting0 )
   demo_state.save()
   print( "demo_house_state: initialization complete" )
+  print("**** DEMO TOKEN:", HouseState.objects()[0]["id"])
   disconnect()
 
 if __name__ == "__main__":

@@ -4,16 +4,14 @@
 
 **current status**
 
-- while the http api is functional with curl or postman,
-browser based web clients do not fetch data because of
-http headers requirements (todo: set header values in server
-response)
+- at the moment the browser based client does not refresh
+and functions partially. Additionally, the demo routes
+need to be documented.
 
-- while logging / debugging data appears in the terminals -
-mongodb and docker to the tty to which docker-compose
-is attached, and the Python and uwsgi to the tty where
-the container of the rucs_api docker service is attached -
-however, logging support needs to be added
+- while logging / debugging data appears in the 
+the tty to which docker-compose
+is attached -
+however, it remains to support logging
 
 - testing - unit and endpoint tests to be created
 
@@ -27,12 +25,12 @@ change it in _docker-compose.yml_
 
 - `RUCS_DEMO=on docker-compose up`
 
-- (after a fix, it would be possib to remove this step)
-enter the container `docker-compose exec rucs_api /bin/bash`,
-load the web service `./uwsgi-ini`
-
 - in a web browser with JavaScript, to go to the
 path _/rucs/_ (for eg. _localhost:8080/rucs/_)
+
+- _note_: if the domain is not localhost, please set
+the constant `domain` in httpd/content/index.js, to the
+correct value
 
 ### description of the remote user control service
 

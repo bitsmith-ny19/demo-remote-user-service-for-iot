@@ -1,4 +1,4 @@
-from flask import (Blueprint, session, g, request, abort)
+from flask import (Blueprint, g, request, abort)
 from rucs.models.house_state import (HouseState, Lighting)
 import json
 from os import environ
@@ -26,9 +26,10 @@ def controller_auth():
   g.house_id = None
   
   # check demo token
-  if "house_id" in session:
+  g.house_id = request.cookies.get("house_id")
+  if g.house_id:
     print( "rucs.router before_request: house id found" )
-    g.house_id = session["house_id"]
+    #g.house_id = session["house_id"]
 
   # bypass authentication if BYPASS_AUTH flag is set:
   if environ["BYPASS_AUTH"]:
