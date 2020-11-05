@@ -2,23 +2,35 @@
 
 ## exercise: control home automation JSON file
 
-**current status**
+### non technical summary
 
-- at the moment the browser based client does not refresh
-and functions partially. Additionally, the demo routes
-need to be documented.
+The state of a house
+includes the on/off state of some lighting units and a
+thermostat. The exercise is to build the web
+service that communicates with the remote user.
+A sepparate web service (not built here),
+would control the house (for ex. "internet of
+things" protocols).
 
-- while logging / debugging data appears in the 
-the tty to which docker-compose
-is attached -
-however, it remains to support logging
+**current status: in development**
 
-- testing - unit and endpoint tests to be created
+- next development objectives:
 
-- to add swagger documentation
+    1. complete client side.
+      at the moment the browser based client does not refresh
+      and functions partially. Additionally, the demo routes
+      need to be documented.
+ 
+    2. implement unit testing testing and logging.
+      - while logging / debugging data appears in the 
+      the tty to which docker-compose
+      is attached -
+      however, it remains to support logging
+
+    3. Swagger documentation
 
 
-### to start
+### to start:
 
 - the app bind to port 8080, if that is busy, to
 change it in _docker-compose.yml_
@@ -32,9 +44,33 @@ path _/rucs/_ (for eg. _localhost:8080/rucs/_)
 the constant `domain` in httpd/content/index.js, to the
 correct value
 
-### description of the remote user control service
+### technical description
 
-http api:
+#### demo endpoints
+
+the purpose of the demo REST endpoints _/rucs/demo/*_ 
+is to supply access control sufficient for a production demo -
+a 512 bit token that is accessible from the server
+(at the current configuration, it's printed to the stdout of the
+docker-compose process) - the demo module is controlled
+by the _RUCS\_DEMO_ environment variable to _docker\_compose_,
+so it can be "unplugged" when multiuser support is developed
+
+- /rucs/demo/set_token
+
+  - request: `{"house_id": TOKEN}`
+
+     the TOKEN accessible from the server
+
+  - response: includes a "set-cookie" header with the token
+
+
+#### endpoints of the RUCS service
+
+- access control: the access control moduel is a stub, it
+  it suitable for a production level demo - a 512 bit key
+  accessible in the server, is secure in a SSL encripted
+  deployment, it's stored in a cookie with the Http-only flag.
 
 - /rucs/ method: GET
 
@@ -72,15 +108,6 @@ document based (Mongo DB) model:
 
   - is_on: boolean field
 
-### non technical summary
-
-exercise in web development: the state of a house
-includes the on/off state of some lighting units and a
-thermostat. The exercise is to build the web
-service that communicates with the remote user.
-A sepparate web service (not built here),
-would control the house (for ex. "internet of
-things" protocols).
 
 ### non technical design reasoning
 
@@ -103,9 +130,9 @@ As suggested by the guidelines, the demo focuses on
 the development as close as possible to production
 on the most critical components. Multi user support
 and authentication method would depend on
-the use case, but even for a demo app, demo user
-authentication
-should be used. But the most critical, common part
+the use case, but even for a demo app, of course
+sufficient access control is required.
+But the most critical, common part
 is the part of the service that reads and controls
 the house state (that data would be the interface with
 a sepparate web service that controls the house,
@@ -138,5 +165,5 @@ the authentication controller uses
 a mock token and there is a demo house state that is
 initialized. For modularity, the demo configuration
 is initialized as an environment variable flag that
-can be unset if a new use case (non demo) is to
+can be unset if a new use case is to
 be developed.
