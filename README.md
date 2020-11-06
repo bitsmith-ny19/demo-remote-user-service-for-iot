@@ -12,14 +12,20 @@ A sepparate web service (not built here),
 would control the house (for ex. "internet of
 things" protocols).
 
+A demo client for html browsers with JavaScript enabled is
+included, accessible at the root url.
+This is not purposed to demonstrate front-end skill
+of the contributors, instead, it is minimal, and the only purpose
+is for
+convenience of who would like to preview the
+functionality in 1 minute, instead of tools such
+as curl or postman.
+
 **current status: in development**
 
 - next development objectives:
 
-    1. complete client side.
-      at the moment the browser based client does not refresh
-      and functions partially. Additionally, the demo routes
-      need to be documented.
+    1. to document demo routes
  
     2. implement unit testing testing and logging.
       - while logging / debugging data appears in the 
@@ -167,3 +173,13 @@ initialized. For modularity, the demo configuration
 is initialized as an environment variable flag that
 can be unset if a new use case is to
 be developed.
+
+#### contributors
+
+- _bitsmith-ny19_
+
+- _contributor 2_: contributed the original draft of the
+demo client,
+using mock data. This contribution consists of the files
+_index.html_, _index.js_, _index.css_ as they appear in
+commit _beed76f_.
