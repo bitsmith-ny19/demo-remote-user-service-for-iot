@@ -29,7 +29,6 @@ def controller_auth():
   g.house_id = request.cookies.get("house_id")
   if g.house_id:
     print( "rucs.router before_request: house id found" )
-    #g.house_id = session["house_id"]
 
   # bypass authentication if BYPASS_AUTH flag is set:
   if environ["BYPASS_AUTH"]:
@@ -44,13 +43,57 @@ def controller_auth():
 @router.route("/", methods = ["GET"])
 def get():
   """
-  get house state as json. the house state object id
+  get house state as json.
+  the house state object id
   is read before this in the request cycle from a cookie.
-  Format of returned data:
-  {"thermostat": TEMP, "lighting": [
-    { "id": ID, "label": LABEL, "is_on": BOOLEAN },
-    ...
-  ] }
+  ---
+  tags:
+    - house-state
+  definitions:
+    - schema:
+      id: HouseState
+      required:
+        - thermostat
+        - lighting
+      properties:
+        thermostat:
+          type: integer
+          description: house temperature control value, in Celsius
+        lighting:
+          type: array
+          items:
+            $ref: '#/definitions/Lighting'
+    - schema:
+      id: Lighting
+      required:
+        - id
+        - label
+        - is_on
+      properties:
+        id:
+          type: integer
+          description: generated id of the lighting unit,
+            unique but can be reasigned if the unit is deleted
+        label:
+          type: string
+          description: unique label to describe the lighting unit
+        is_on:
+          type: boolean
+          description: boolean power state of the lighting unit
+  parameters:
+    - name: cookie
+      in: header
+      description: "stores access token for demo"
+      required: true
+      type: object
+      properties:
+        - house_id:
+          type: string
+  responses:
+    200:
+      description: returns house state with id house_id
+      schema:
+        $ref: '#/definitions/HouseState' 
   """
   house_state = HouseState.objects( id = g.house_id )
   return house_state[0].to_json()
@@ -59,9 +102,21 @@ def get():
 def post():
   """
   post new lighting unit with give LABEL and on/off STATE.
-  usage:
-  { "label": LABEL, "is_on": STATE }
-
+  ---
+  tags:
+    - house-state
+  parameters:
+    - name: item
+      in: body
+      description: the lighting unit to be added
+      required: true
+      schema:
+        $ref: '#/definitions/Lighting'
+  responses:
+    200:
+      description: lighting unit added
+  """
+  """
   Uniqueness condition verified manually  -
   mongodb can only verify uniqueness across a collection, and
   not in a list of embedded documents as a "virtual collection"
@@ -103,9 +158,22 @@ def post():
 @router.route("/", methods = ["DELETE"])
 def delete():
   """
-  delete lighting unit.
-  usage:
-  { "id": ID }
+  Delete lighting unit.
+  ---
+  tags:
+    - house-state
+    - lighting-unit
+    - delete
+  parameters:
+    - name: body
+      in: body
+      properties:
+        id:
+          description: id of lighting unit to delete
+          type: integer
+  responses:
+    200:
+      description: lighing unit deleted
   """
   house_state = HouseState.objects( id = g.house_id )[0]
   id = request.get_json()["id"]
@@ -130,11 +198,45 @@ def put():
   it can also update in a single request the thermostat, label &
   is_on of a single lighting unit, but this is not included in
   the specification).
-  usage:
-    { "thermostat": TEMP } ||
-    { "lighting": [ { "id": ID, "label": LABEL } ] } ||
-    { "lighting": [ { "id": ID, "is_on": STATE } ] }
-
+  ---
+  parameters:
+    - name: item
+      in: body
+      schema:
+        id: house-state-subgraph-single-value
+        description: subgraph of HouseState that uniquely
+          identifies a single field for an update operation
+        minProperties: 1
+        maxProperties: 1
+        properties:
+          thermostat:
+            type: string
+            description: vaule in Celsius of new temperature
+          lighting:
+            type: array
+            minItems: 1
+            maxItems: 1
+            items:
+              schema:
+                id: lighting-subgraph-single-value
+                description: subgraph of Lighting that uniquely
+                  identifies a single field for an update operation
+                type: object
+                required: id
+                minProperties: 2
+                maxProperties: 2
+                properties:
+                  id:
+                    type: integer
+                    description: id of lighting unit
+                  label:
+                    type: string
+                    description: content of new label
+                  on_state:
+                    type: boolean
+                    description: new power stat of the lighting unit
+  """
+  """
   todo: the operation is simply to update a subgraph
   of a Mongo document - it seems that it can
   be abstracted to replace all the conditionals used bellow,
