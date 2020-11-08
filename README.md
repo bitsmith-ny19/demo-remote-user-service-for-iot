@@ -21,6 +21,9 @@ convenience of who would like to preview the
 functionality in 1 minute, instead of tools such
 as curl or postman.
 
+This exercise was an assignment for the candidate application
+process to a job opening.
+
 **current status: in development**
 
 - next development objectives:
@@ -32,9 +35,6 @@ as curl or postman.
       the tty to which docker-compose
       is attached -
       however, it remains to support logging
-
-    3. Swagger documentation
-
 
 ### to start:
 

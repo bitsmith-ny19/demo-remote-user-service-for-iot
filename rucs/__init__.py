@@ -1,10 +1,11 @@
 from os import environ
-from flask import Flask
+from flask import (Flask, jsonify)
 from uwsgidecorators import postfork
 from flask_mongoengine import MongoEngine
 from rucs.router import router
 from demo import routes_demo_only
 from flask_cors import CORS
+from flask_swagger import swagger
 
 def create_app( testing_conf = None ):
 
@@ -34,6 +35,14 @@ def create_app( testing_conf = None ):
     rucs.register_blueprint(routes_demo_only.routes)
 
   rucs.register_blueprint(router)
+  @rucs.route("/spec")
+  def spec():
+    openapi = swagger(rucs)
+    openapi["info"]["version"] = "0.0a"
+    openapi["info"]["title"] = "RUCS"
+    openapi["info"]["description"] = \
+      "(R)emote (U)ser (C)ontrol (S)ervice"
+    return jsonify( openapi )
 
   # to move this to a controller subpackage?
   @rucs.after_request
