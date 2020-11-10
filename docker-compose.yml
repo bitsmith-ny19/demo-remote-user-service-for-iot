@@ -22,6 +22,16 @@ services:
        context: .
     depends_on:
       - rucs_db
+    # todo - replace with a linux service so that uwsgi service
+    # can be controlled when auto-load is set (it is set by default)
+    # more natural to test unset with test ${BAR+baz}, but
+    # ${BAR+baz} syntax not supported in Docker compose 3.0 syntax.
+    # if UWSGI_ENTYRPONINT_OFF is unset (or has value "is_unset"),
+    # run uwsgi-ini. otherwise - do not exit the container.
+    entrypoint: bash -c "
+      (test foo_${UWSGI_ENTRYPOINT_OFF-is_unset} = foo_is_unset)
+      && /usr/src/uwsgi-ini
+      || while true; do true; done"
     environment:
       - DEMO=${RUCS_DEMO}
       - PRODUCTION_CONFIG=${RUCS_PRODUCTION_CONFIG}
@@ -33,7 +43,6 @@ services:
     tty: true
     volumes:
       - .:/usr/src:ro
-      - rucs-api-pybits:/usr/lib/__pycache__
       - rucs-api-instance:/usr/lib/rucs-api-instance
 
   rucs_db:

@@ -12,10 +12,7 @@
 # production settings (such as secret key) from PRODUCTION_CONFIG
 # variable, otherwise, read from file dev.cfg
 
-# this is created in the image build, can be removed?
-mkdir /usr/lib/__pycache__
-
-export PYTHONPYCACHEPREFIX=/usr/lib/__pycache__
+export PYTHONPYCACHEPREFIX=/var/cache/py
 python demo/demo_house_state.py \
 	&&
 	DEMO=${DEMO:+bar} \

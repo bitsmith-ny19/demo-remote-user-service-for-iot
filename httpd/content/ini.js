@@ -1,4 +1,4 @@
-const domain = "192.168.1.25"
+const domain = "localhost"
 const sampleData = {
     "_id": {
         "$oid": "5f9f31194d209a9655856f6b"

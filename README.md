@@ -21,9 +21,6 @@ convenience of who would like to preview the
 functionality in 1 minute, instead of tools such
 as curl or postman.
 
-This exercise was an assignment for the candidate application
-process to a job opening.
-
 **current status: in development**
 
 - next development objectives:
@@ -72,6 +69,10 @@ so it can be "unplugged" when multiuser support is developed
 
 
 #### endpoints of the RUCS service
+
+the openapi specification of the service is accessible
+at the endpoint _/rucs/spec_ as well as in the docstrings
+in the source file _rucs/views.py_.
 
 - access control: the access control moduel is a stub, it
   it suitable for a production level demo - a 512 bit key
@@ -183,3 +184,13 @@ demo client,
 using mock data. This contribution consists of the files
 _index.html_, _index.js_, _index.css_ as they appear in
 commit _beed76f_.
+
+#### general comments
+
+This exercise was an assignment for the candidate application
+process to a job opening, but later it was taken as a fieldwork
+oportunity to implement a
+complete example of an isolated
+service within the Flask ecosystem.
+
+-- bitsmith, ecosystems engineer

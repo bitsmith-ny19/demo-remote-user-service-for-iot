@@ -205,6 +205,9 @@ in the specification).
                     on_state:
                       type: boolean
                       description: new power stat of the lighting unit
+    responses:
+      '200':
+        description: value updated  
     """
     """
     todo: the operation is simply to update a subgraph
