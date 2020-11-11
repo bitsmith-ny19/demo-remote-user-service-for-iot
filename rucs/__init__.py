@@ -1,8 +1,6 @@
 from os import environ
 import logging
 from flask import (Flask, jsonify)
-#from uwsgidecorators import postfork
-#from flask_mongoengine import MongoEngine
 from rucs.router import router
 from demo import routes_demo_only
 from flask_cors import CORS
@@ -11,8 +9,6 @@ from rucs.controllers.mongo import db_connect
 
 def create_app( testing_conf = None ):
 
-#  mongo = MongoEngine()
-  
   rucs = Flask(
     __name__,
     instance_relative_config = True,
@@ -21,25 +17,24 @@ def create_app( testing_conf = None ):
   CORS(rucs)
 
   if testing_conf is None:
-    logging.info( "loading config from", environ["RUCS_CONFIG"] )
     rucs.config.from_envvar("RUCS_CONFIG")
+      
   else:
     logging.info( "loading config from testing config" )
     rucs.config.from_mapping( testing_conf )
     
   db_connect(rucs)
 
-  # allow fork() calls by pymongo while the
-  # wsgi process executes this flask app
-#  @postfork
-#  def setup_db():
-#    mongo.init_app( rucs )
-
   if environ["DEMO"]:
     logging.info("initializing demo mode")
     rucs.register_blueprint(routes_demo_only.routes)
 
   rucs.register_blueprint(router)
+
+  if rucs.config["TESTING"] == True:
+    @rucs.route("/test")
+    def test():
+      return '"test 123"'
 
   @rucs.route("/spec")
   def spec():

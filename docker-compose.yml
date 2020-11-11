@@ -22,11 +22,10 @@ services:
        context: .
     depends_on:
       - rucs_db
-    # todo - replace with a linux service so that uwsgi service
-    # can be controlled when auto-load is set (it is set by default)
-    # more natural to test unset with test ${BAR+baz}, but
-    # ${BAR+baz} syntax not supported in Docker compose 3.0 syntax.
-    # if UWSGI_ENTYRPONINT_OFF is unset (or has value "is_unset"),
+    # note: possibly it's more natural to test if a variable
+    # is unset by `test ${BAR+baz}`, but that parameter expansion
+    # is not included in Docker compose 3.0 format.
+    # If UWSGI_ENTYRPONINT_OFF is unset (or has value "is_unset"),
     # run uwsgi-ini. otherwise - do not exit the container.
     entrypoint: bash -c "
       (test foo_${UWSGI_ENTRYPOINT_OFF-is_unset} = foo_is_unset)

@@ -21,52 +21,55 @@ convenience of who would like to preview the
 functionality in 1 minute, instead of tools such
 as curl or postman.
 
-**current status: in development**
-
-- next development objectives:
-
-    1. to document demo routes
- 
-    2. implement unit testing testing and logging.
-      - while logging / debugging data appears in the 
-      the tty to which docker-compose
-      is attached -
-      however, it remains to support logging
-
 ### to start:
 
-- the app bind to port 8080, if that is busy, to
-change it in _docker-compose.yml_
+1. `RUCS_DEMO=set docker-compose up` (to configure domain or
+   port see note bellow)
 
-- `RUCS_DEMO=on docker-compose up`
+The RUCS endpoints should now be accessible as documented bellow, and
+the openapi spec at the endpoint _/rucs/spec_.
 
-- in a web browser with JavaScript, to go to the
-path _/rucs/_ (for eg. _localhost:8080/rucs/_)
+To allow "instant preview" instead of curl or postman requests:
 
-- _note_: if the domain is not localhost, please set
-the constant `domain` in httpd/content/index.js, to the
-correct value
+2. in a web browser with a JavaScript interpreter, to go to the
+   path _/rucs/_ (for eg. _localhost:8080/rucs/_)
+
+3. the 12 digit access token is printed to the _docker\_compose_
+   output in a line that starts in _**** DEMO TOKEN_
+   (it's regenerated every time that the container is restarted).
+
+_note_: to modify port or domain -
+default domain is localhost, default port is 8080.
+These values are configured in the `domain` and `port`
+constant in the script _httpd/content/index.js_. The port
+would also need to be set in the `services.httpd.ports`
+key in the Docker compose file.
 
 ### technical description
 
-#### demo endpoints
+#### demo endpoint
 
-the purpose of the demo REST endpoints _/rucs/demo/*_ 
-is to supply access control sufficient for a production demo -
-a 512 bit token that is accessible from the server
-(at the current configuration, it's printed to the stdout of the
-docker-compose process) - the demo module is controlled
-by the _RUCS\_DEMO_ environment variable to _docker\_compose_,
-so it can be "unplugged" when multiuser support is developed
+To enable the demo , set
+the _RUCS\_DEMO_ environment variable to the _docker\_compose_ command
+to a string that is not null.
 
 - /rucs/demo/set_token
 
+  - description: allows that the server would set the cookie. The
+    purpose is to secure the access token in the case that the client
+    of the demo service runs in a general use web browser.
+    The security level is the
+    isolation of the access token from the scope of scripts
+    by the http-only flag
+    (http-only - issue #2).
+
   - request: `{"house_id": TOKEN}`
 
-     the TOKEN accessible from the server
+    the access TOKEN is accessible from the server. It is printed in
+    the _docker-compose_ tty in a
+    line that starts in _**** DEMO TOKEN_
 
   - response: includes a "set-cookie" header with the token
-
 
 #### endpoints of the RUCS service
 
@@ -74,10 +77,12 @@ the openapi specification of the service is accessible
 at the endpoint _/rucs/spec_ as well as in the docstrings
 in the source file _rucs/views.py_.
 
-- access control: the access control moduel is a stub, it
-  it suitable for a production level demo - a 512 bit key
-  accessible in the server, is secure in a SSL encripted
-  deployment, it's stored in a cookie with the Http-only flag.
+- access control: the access control module is a stub, it
+  it suitable for a production level demo - a 384 bit key
+  accessible in the server, would be secured in a SSL encripted
+  deployment, it's required in all RUCS service endpoints in the
+  cookie header with the Http-only flag set
+  (http-only: issue #2).
 
 - /rucs/ method: GET
 
@@ -95,9 +100,10 @@ in the source file _rucs/views.py_.
 
 - /rucs/ methods PUSH, PUT, DELETE
 
-  - for now, see descriptions at individual _rucs\_router.py_ sections 
+  - see the openapi spec at _/rucs/spec_ or in the docstrings
+    in _rucs/views.py_
 
-document based (Mongo DB) model:
+#### document based (Mongo DB) model:
 
 - house collection:
 
@@ -114,7 +120,6 @@ document based (Mongo DB) model:
   - label: String field
 
   - is_on: boolean field
-
 
 ### non technical design reasoning
 

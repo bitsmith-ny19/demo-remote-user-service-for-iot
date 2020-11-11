@@ -7,7 +7,7 @@
 # to initialize the dev database
 
 # if DEMO is set in the env (used in docker-compose.yml)
-# define DEMO=set. If PRODUCTION_CONFIG is set (used in
+# define DEMO=bar. If PRODUCTION_CONFIG is set (used in
 # docker-compose.yml), read
 # production settings (such as secret key) from PRODUCTION_CONFIG
 # variable, otherwise, read from file dev.cfg
@@ -15,6 +15,7 @@
 export PYTHONPYCACHEPREFIX=/var/cache/py
 python demo/demo_house_state.py \
 	&&
+	UWSGI_LOADED=foo
 	DEMO=${DEMO:+bar} \
 	BYPASS_AUTH=${BYPASS_AUTH+baz} \
 	RUCS_CONFIG=${PRODUCTION_CONFIG:-dev.cfg} \

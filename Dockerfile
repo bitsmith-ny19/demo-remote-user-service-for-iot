@@ -13,5 +13,5 @@ RUN mkdir -p /var/cache/pytest
 
 VOLUME /usr/lib/rucs-api-instance
 
-# todo: load uwsgi as a systemd service - to replace entrypoint?
+# direction for issue #5
 # COPY uwsgi_rc.local /etc/rc.local

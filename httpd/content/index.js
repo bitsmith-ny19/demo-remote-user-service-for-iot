@@ -10,11 +10,3 @@ const createIndex = data => {
 
     root.appendChild(div)
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const root = document.getElementById('root')
-    createTitle('IoT Demo App')
-    getHome()
-        .then(res => createIndex(res))
-        .catch(() => createLogin())
-})

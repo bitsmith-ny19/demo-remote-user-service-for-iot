@@ -1,4 +1,5 @@
 const domain = "localhost"
+const port = "8080"
 const sampleData = {
     "_id": {
         "$oid": "5f9f31194d209a9655856f6b"
@@ -19,3 +20,10 @@ const sampleData = {
         }
     ]
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('root')
+    createTitle('IoT Demo App')
+    getHome()
+        .then(res => createIndex(res))
+        .catch(() => createLogin())
+})

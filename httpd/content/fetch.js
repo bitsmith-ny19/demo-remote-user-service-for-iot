@@ -4,7 +4,7 @@ async function getToken(houseId) {
     }
 
     const res = await fetch(
-		`http://${domain}:8080/rucs/demo/set_token`,
+		`http://${domain}:${port}/rucs/demo/set_token`,
 		{
 	        method: 'POST',
 	        body: JSON.stringify(data),
@@ -18,7 +18,7 @@ async function getToken(houseId) {
 }
 
 async function getHome() {
-    const res = await fetch(`http://${domain}:8080/rucs/`, {
+    const res = await fetch(`http://${domain}:${port}/rucs/`, {
         method: 'GET',
         credentials: 'include'
     })
@@ -27,7 +27,7 @@ async function getHome() {
 }
 
 async function update(record){
-    const res = await fetch(`http://${domain}:8080/rucs/`, {
+    const res = await fetch(`http://${domain}:${port}/rucs/`, {
         method: 'PUT',
         body: JSON.stringify(record),
         headers: {
@@ -43,7 +43,7 @@ const deleteLight = e => {
     const record = {
 		id: parseInt(e.currentTarget.parentNode.getAttribute('data-id'))
 	};
-    fetch(`http://${domain}:8080/rucs/`, {
+    fetch(`http://${domain}:${port}/rucs/`, {
         method: 'DELETE',
         body: JSON.stringify(record),
         headers: {
@@ -56,7 +56,7 @@ const deleteLight = e => {
 const addLight = e => {
 	e.preventDefault();
     const record = { label: e.target.children[0].value, is_on: false }
-    fetch( `http://${domain}:8080/rucs/`, {
+    fetch( `http://${domain}:${port}/rucs/`, {
         method: 'POST',
         body: JSON.stringify(record),
         headers: {

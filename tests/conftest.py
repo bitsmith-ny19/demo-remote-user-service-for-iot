@@ -1,6 +1,6 @@
-import tests
+from tests.data_init import init_db
 import pytest
-import rucs
+from rucs import create_app
 
 @pytest.fixture
 def rucs_testing():
@@ -11,13 +11,19 @@ def rucs_testing():
     "MONGODB_HOST": "mongomock://localhost"
   })
 
-  tests.data_init.house_state()
+  init_db()
 
   yield rucs_testing_app
 
+# note about pytest: "fixtures" suggest metaprogramming
+# techniques - the argument rucs_testing is
+# not really an argument - it's a value, evaluated
+# as the rucs_testing fixture defined above!
+# this also occurs in test_ functions defined
+# in pytest tests.
 @pytest.fixture
-def client( app ):
-  return app.test_client()
+def client( rucs_testing ):
+  return rucs_testing.test_client()
 
 @pytest.fixture
 def runner( app ):
